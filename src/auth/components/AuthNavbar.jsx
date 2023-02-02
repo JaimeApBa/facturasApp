@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-export const Navbar = () => {
+export const AuthNavbar = () => {
     const location = useLocation();
 
     const { pathname } = location;
