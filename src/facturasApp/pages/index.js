@@ -1,3 +1,4 @@
 
 
-export * from './FacturasAppPage';
+export * from './HomePage';
+export * from './BillingsPage';

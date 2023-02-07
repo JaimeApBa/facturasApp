@@ -1,13 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { FacturasAppPage } from '../pages';
+import { BillingsPage, HomePage } from '../pages';
 import { HomeRouterContext } from '../context';
 
 export const FacturasAppRoutes = () => {
   return (
     <Routes>
         <Route element={ <HomeRouterContext /> }>
-          <Route path="home" element={ <FacturasAppPage /> } />
-          <Route path="/*" element={ <Navigate to="/home" /> } />
+          <Route path="/" element={ <HomePage /> } />
+          <Route path="/facturas/:id" element={ <BillingsPage /> } />
+          <Route path="/*" element={ <Navigate to="/" /> } />
         </Route>
 
     </Routes>

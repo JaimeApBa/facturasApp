@@ -8,12 +8,11 @@ export const loadAllAdressesByUser = async (id) => {
         const docs = await getDocs(collectionRef);
         
         const addresses = [];
-    
         docs.forEach(doc => {
             addresses.push(doc.data());
         })
-        return addresses;
         
+        return addresses;
     } catch (error) {
         console.log(error);
     }

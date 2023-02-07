@@ -6,14 +6,14 @@ import { AddressComponent } from "./AddressComponent";
 
 export const AllAddressesComponent = () => {
 
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const { getAllAddressesByUser, allAddresses } = useContext(HomeContext);
   const { uid } = useContext(AuthContext);
 
   useEffect(() => {
     getAllAddressesByUser(uid);
-  }, [allAddresses])
-  
+  }, []);
+
   const handleModal = () => {
      setShowModal(true);
   }
@@ -21,7 +21,7 @@ export const AllAddressesComponent = () => {
 
   return (
     <>
-      <div className="container">
+      <section className="container">
         <header className="headerHome">
           <p className="textAddress">Selecciona una dirección:</p>
         </header>
@@ -29,14 +29,14 @@ export const AllAddressesComponent = () => {
           {
             (allAddresses && allAddresses.length > 0)
                 && allAddresses.map(address => (
-                  <AddressComponent {...address } key={ JSON.stringify(address) } />
+                  <AddressComponent {...address } key={ address.id } />
                 ))
           }
         </section>
         <footer className="footerHome">
           <p className="bt-add linkTo"><span className="material-symbols-outlined" onClick={ handleModal }>add</span></p>
         </footer>
-      </div>
+      </section>
       {
         (showModal) && <AddAddress setShowModal={ setShowModal } />
       }

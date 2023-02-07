@@ -7,6 +7,7 @@ export const HomeProvider = ({ children }) => {
     
     const initialState = {
         allAddresses: null,
+        currentAddress: null,
         billings: null
     }
 
@@ -23,10 +24,20 @@ export const HomeProvider = ({ children }) => {
         dispatch(action);
     }
 
+    const setCurrentAddress = (address) => {
+        const action = {
+            type: homeTypes.currentAddress,
+            payload: address
+        }
+        
+        dispatch(action);
+    }
+
     return (
         <HomeContext.Provider value={{
                 ...homeState,
                 getAllAddressesByUser,
+                setCurrentAddress
         }}>
             { children }
         </HomeContext.Provider>

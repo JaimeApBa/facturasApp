@@ -2,7 +2,7 @@ import { Header } from '../../ui';
 import { AllAddressesComponent } from '../components';
 import { Navbar } from '../components/Navbar';
 
-export const FacturasAppPage = () => {
+export const HomePage = () => {
   return (
     <>
       <Header />

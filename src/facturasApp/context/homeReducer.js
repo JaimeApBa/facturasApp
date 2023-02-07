@@ -11,6 +11,12 @@ export const homeReducer = ( state, action ) => {
                 ...state,
                 allAddresses: payload
             }
+        case homeTypes.currentAddress:
+            
+            return {
+                ...state,
+                currentAddress: payload
+            }
 
         case homeTypes.billings:
             
