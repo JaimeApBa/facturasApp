@@ -18,11 +18,29 @@ export const homeReducer = ( state, action ) => {
                 currentAddress: payload
             }
 
-        case homeTypes.billings:
+        case homeTypes.water:
             
             return {
                 ...state,
-                billings: payload
+                water: payload
+            }
+        case homeTypes.electricity:
+            
+            return {
+                ...state,
+                electricity: payload
+            }
+        case homeTypes.gas:
+            
+            return {
+                ...state,
+                gas: payload
+            }
+        case homeTypes.phone:
+            
+            return {
+                ...state,
+                phone: payload
             }
     
         default:

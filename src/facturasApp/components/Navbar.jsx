@@ -1,21 +1,25 @@
-import { useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../auth";
 import { HomeContext } from "../context";
 
 export const Navbar = () => {
     const location = useLocation();
     const { email, logout } = useContext(AuthContext);
-    const { currentAddress } = useContext(HomeContext);
-    
+    const { currentAddress, setCurrentAddress } = useContext(HomeContext);
+    const params = useParams()
     const { address, number, floor, door, side, city } = currentAddress || '';
     
     const navigate = useNavigate();
 
-    const { pathname } = location;
+    const { pathname, state } = location;
     
     const navigateBack = () => {
-        navigate(-1);
+        if(params.year) {
+            navigate(`/facturas/${params.id}`)
+        } else {
+            navigate('/');
+        }
     }
     
     return (

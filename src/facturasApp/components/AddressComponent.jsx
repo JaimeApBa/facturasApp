@@ -21,7 +21,7 @@ export const AddressComponent = (singleAddress) => {
 
     const navigateTo = () => {
         setCurrentAddress(singleAddress);
-        navigate(`facturas/${id}`, { replace: true });
+        navigate(`facturas/${id}`, { state: { currentAddres: singleAddress } });
     }
     
     return (

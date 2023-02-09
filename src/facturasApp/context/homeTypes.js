@@ -1,5 +1,8 @@
 export const homeTypes = {
     allAddress: '[Home] allAddress',
     currentAddress: '[Home] currentAddress',
-    billings: '[Home] billings',
+    water: '[Home] water',
+    gas: '[Home] gas',
+    electricity: '[Home] electricity',
+    phone: '[Home] phone',
 }
