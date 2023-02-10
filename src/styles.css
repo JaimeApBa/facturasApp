@@ -363,18 +363,25 @@ a {
     padding-bottom: 10px;
 }
 .year-selector-container,
-.sectionBillings {
+.sectionBillings,
+.totalSpendings {
     border-left: 10px solid var(--color-primary);
     border-right: 10px solid var(--color-primary);
     border-top: 1px solid var(--color-primary);
     border-bottom: 1px solid var(--color-primary);
     
 }
-.sectionBillings {
+.sectionBillings, 
+.totalSpendings {
     margin-top: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
 }
+.totalSpendings {
+    text-align: end;
+    padding-right: 20px;
+}
+
 .year-selector-label{
     font-size: 18px;
     font-weight: bold;
@@ -401,6 +408,16 @@ a {
 
 .billing-icon {
     font-size: 45px;
+}
+
+.totalSpendings-text {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.spending {
+    font-size: 28px;
+    font-weight: bold;
 }
 
 /* Add Billings */

@@ -9,11 +9,11 @@ export const useCalculateTotalBillings = (billing=[]) => {
         
         billing.map( (element, index) => {
             totalAmounts += +element.totalAmount;
-            totalUsage += +element.usage;
+            totalUsage += +element.usage || 0;
             averageAmount = totalAmounts / (index + 1);
             averageUsage = totalUsage / (index + 1);
         });
-
+ 
         totalAmounts = totalAmounts.toFixed(2);
         totalUsage = totalUsage.toFixed(2);
         averageAmount = averageAmount.toFixed(2);

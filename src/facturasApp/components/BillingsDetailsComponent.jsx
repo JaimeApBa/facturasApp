@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../auth";
-import { useCalculateTotalBillings } from "../../hooks";
+import { useCalculateTotalAnnual, useCalculateTotalBillings, useCalculateTotalSpendingByMonth } from "../../hooks";
 import { HomeContext } from "../context";
 import { AddBilling } from "../modals";
 
 export const BillingsDetailsComponent = () => {
 
   const defaultYear = new Date().getFullYear();
+  const emptyArray = Array(12).fill(0);
 
   const [showModal, setShowModal] = useState(false);
   const [year, setYear] = useState(defaultYear);
@@ -15,6 +16,8 @@ export const BillingsDetailsComponent = () => {
   const [totalElectricity, setTotalElectricity] = useState({});
   const [totalGas, setTotalGas] = useState({});
   const [totalPhone, setTotalPhone] = useState({});
+  const [totalAnnual, setTotalAnnual] = useState(0);
+  const [spendingsByMonth, setSpendingsByMonth] = useState(emptyArray);
   
   const navigate = useNavigate();
   const { id } = useParams();
@@ -24,7 +27,6 @@ export const BillingsDetailsComponent = () => {
           water, electricity, gas, phone, currentAddress
         } = useContext(HomeContext);
   
-
   const handleModal = () => {
     setShowModal(true);
   }
@@ -33,13 +35,15 @@ export const BillingsDetailsComponent = () => {
     const { value } = target;
     setYear(value);
   }
+
  
-  useEffect(() => {
-    loadBillingsWater(uid, id, year);
-    loadBillingsElectricity(uid, id, year);
-    loadBillingsGas(uid, id, year);
-    loadBillingsPhone(uid, id, year);
-  }, [year]);
+    const x = useMemo(() => {
+      loadBillingsWater(uid, id, year);
+      loadBillingsElectricity(uid, id, year);
+      loadBillingsGas(uid, id, year);
+      loadBillingsPhone(uid, id, year);
+    }, [year])
+
   
   useEffect(() => {
     setTotalWater( useCalculateTotalBillings(water) );
@@ -50,12 +54,40 @@ export const BillingsDetailsComponent = () => {
   }, [electricity]);
 
   useEffect(() => {
-    setTotalGas( useCalculateTotalBillings(gas) );;
+    setTotalGas( useCalculateTotalBillings(gas) );
   }, [gas]);
 
   useEffect(() => {
     setTotalPhone( useCalculateTotalBillings(phone) );
   }, [phone]);
+
+  useEffect(() => {
+    const resultTotalAnnual = useCalculateTotalAnnual(totalWater, totalPhone, totalGas, totalElectricity)
+    setTotalAnnual( resultTotalAnnual);
+    // calculateTotalAnnualByMonth();
+  }, [totalWater, totalPhone, totalGas, totalElectricity]);
+    
+  useEffect(() => {
+    calculateTotalAnnualByMonth();
+  }, [x]);
+
+
+  
+  const calculateTotalAnnualByMonth = () => {
+    
+    if(water) {
+      setSpendingsByMonth(useCalculateTotalSpendingByMonth(water, spendingsByMonth));
+    }
+    if(electricity) {
+      setSpendingsByMonth(useCalculateTotalSpendingByMonth(electricity, spendingsByMonth));
+    }
+    if(gas) {
+      setSpendingsByMonth(useCalculateTotalSpendingByMonth(gas, spendingsByMonth));
+    }
+    if(phone) {
+      setSpendingsByMonth(useCalculateTotalSpendingByMonth(phone, spendingsByMonth));
+    }
+  }
 
   const navigateTo = (type) => {
 
@@ -77,10 +109,9 @@ export const BillingsDetailsComponent = () => {
       default:
         break;
     }
-
+    
     navigate(`/facturas/${id}/${year}/${type}`, { state: { type: stateByType, currentAddress: currentAddress } });
   }
-  
   return (
     <>
       <section className="container">
@@ -159,6 +190,10 @@ export const BillingsDetailsComponent = () => {
                 }
               </div>
             </div>
+          </div>
+
+          <div className="totalSpendings" onClick={ () => navigateTo('annualSummary') }>
+                <p className="totalSpendings-text">Gasto Total Anual: <span className="spending">{ totalAnnual } €</span> </p>
           </div>
 
           <footer className="footerHome">

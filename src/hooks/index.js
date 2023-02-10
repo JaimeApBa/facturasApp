@@ -8,3 +8,5 @@ export * from './useDeleteAddress';
 export * from './useUploadNewBilling';
 export * from './useLoadBillingsByYear';
 export * from './useCalculateTotalBillings';
+export * from './useCalculateTotalSpendingByMonth';
+export * from './useCalculateTotalAnnual';
