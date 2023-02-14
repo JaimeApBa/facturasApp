@@ -409,7 +409,9 @@ a {
 .billing-icon {
     font-size: 45px;
 }
-
+.totalSpendings:hover {
+    background-color: var(--color-primary-light);
+}
 .totalSpendings-text {
     font-size: 20px;
     margin-top: 0;

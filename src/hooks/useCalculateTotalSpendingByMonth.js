@@ -1,19 +1,18 @@
 
-export const useCalculateTotalSpendingByMonth = (billing=[], totalSpending=[]) => {
-    console.log(billing);
-    console.log('before',totalSpending);
+export const useCalculateTotalSpendingByMonth = ({ ...billing}) => {
+    const totalSpending = Array(12).fill(0);
     if(billing) {
-        
-        billing.map( (element) => {
-            const date = new Date(element.convertedDate).getMonth();
-            totalSpending[date] = (totalSpending[date] + +element.totalAmount);
-            
-        });
-        console.log('after',totalSpending);
-        
-               
+        for (const key in billing) {
+
+            billing[key].map( (element) => {
+                const date = new Date(element.convertedDate).getMonth();
+                totalSpending[date] = (totalSpending[date] + +element.totalAmount);
+                
+            });
+        }
         return {
             totalSpending
         }
+
     } else return;
 }

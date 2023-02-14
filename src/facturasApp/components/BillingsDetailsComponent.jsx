@@ -68,25 +68,23 @@ export const BillingsDetailsComponent = () => {
   }, [totalWater, totalPhone, totalGas, totalElectricity]);
     
   useEffect(() => {
-    calculateTotalAnnualByMonth();
-  }, [x]);
+    const dataByMonth = calculateTotalAnnualByMonth();
+    setSpendingsByMonth(dataByMonth.totalSpending);
+    
+  }, [water, electricity, gas, phone]);
 
 
   
   const calculateTotalAnnualByMonth = () => {
-    
-    if(water) {
-      setSpendingsByMonth(useCalculateTotalSpendingByMonth(water, spendingsByMonth));
-    }
-    if(electricity) {
-      setSpendingsByMonth(useCalculateTotalSpendingByMonth(electricity, spendingsByMonth));
-    }
-    if(gas) {
-      setSpendingsByMonth(useCalculateTotalSpendingByMonth(gas, spendingsByMonth));
-    }
-    if(phone) {
-      setSpendingsByMonth(useCalculateTotalSpendingByMonth(phone, spendingsByMonth));
-    }
+    let billing = {}
+
+    if(water) billing = { ...billing, water }
+    if(electricity) billing = { ...billing, electricity }
+    if(gas) billing = { ...billing, gas }
+    if(phone) billing = { ...billing, phone }
+
+    return useCalculateTotalSpendingByMonth(billing);
+
   }
 
   const navigateTo = (type) => {
@@ -110,7 +108,7 @@ export const BillingsDetailsComponent = () => {
         break;
     }
     
-    navigate(`/facturas/${id}/${year}/${type}`, { state: { type: stateByType, currentAddress: currentAddress } });
+    navigate(`/facturas/${id}/${year}/${type}`, { state: { type: stateByType, currentAddress: currentAddress, spendingsByMonth: spendingsByMonth } });
   }
   return (
     <>
@@ -192,7 +190,7 @@ export const BillingsDetailsComponent = () => {
             </div>
           </div>
 
-          <div className="totalSpendings" onClick={ () => navigateTo('annualSummary') }>
+          <div className="totalSpendings linkTo" onClick={ () => navigateTo('annualSummary') }>
                 <p className="totalSpendings-text">Gasto Total Anual: <span className="spending">{ totalAnnual } €</span> </p>
           </div>
 
