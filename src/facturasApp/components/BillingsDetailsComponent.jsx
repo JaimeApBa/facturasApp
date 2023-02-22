@@ -1,25 +1,28 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../auth";
-import { useCalculateTotalAnnual, useCalculateTotalBillings, useCalculateTotalSpendingByMonth } from "../../hooks";
+import { useCalculateStatistics } from "../../hooks";
 import { HomeContext } from "../context";
 import { AddBilling } from "../modals";
+import { StatisticsDetail } from "./";
 
 export const BillingsDetailsComponent = () => {
 
-  const defaultYear = new Date().getFullYear();
-  const emptyArray = Array(12).fill(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  let defaultYear = null;
+
+  if( location.state.defaultYear ) {
+    defaultYear = location.state.defaultYear;
+  } else{
+    defaultYear = new Date().getFullYear();
+  }
 
   const [showModal, setShowModal] = useState(false);
   const [year, setYear] = useState(defaultYear);
-  const [totalWater, setTotalWater] = useState({});
-  const [totalElectricity, setTotalElectricity] = useState({});
-  const [totalGas, setTotalGas] = useState({});
-  const [totalPhone, setTotalPhone] = useState({});
-  const [totalAnnual, setTotalAnnual] = useState(0);
-  const [spendingsByMonth, setSpendingsByMonth] = useState(emptyArray);
+    
   
-  const navigate = useNavigate();
   const { id } = useParams();
   const { uid } = useContext(AuthContext);
   const { 
@@ -27,89 +30,29 @@ export const BillingsDetailsComponent = () => {
           water, electricity, gas, phone, currentAddress
         } = useContext(HomeContext);
   
+  const { totalWater, totalElectricity, totalGas, totalPhone, totalAnnual, spendingsByMonth } = useCalculateStatistics(water, electricity, gas, phone)
+  
   const handleModal = () => {
     setShowModal(true);
   }
-
+  
   const handleChange = ({ target }) => {
     const { value } = target;
     setYear(value);
   }
-
- 
-    const x = useMemo(() => {
-      loadBillingsWater(uid, id, year);
-      loadBillingsElectricity(uid, id, year);
-      loadBillingsGas(uid, id, year);
-      loadBillingsPhone(uid, id, year);
-    }, [year])
-
   
   useEffect(() => {
-    setTotalWater( useCalculateTotalBillings(water) );
-  }, [water]);
-
-  useEffect(() => {
-    setTotalElectricity( useCalculateTotalBillings(electricity) );
-  }, [electricity]);
-
-  useEffect(() => {
-    setTotalGas( useCalculateTotalBillings(gas) );
-  }, [gas]);
-
-  useEffect(() => {
-    setTotalPhone( useCalculateTotalBillings(phone) );
-  }, [phone]);
-
-  useEffect(() => {
-    const resultTotalAnnual = useCalculateTotalAnnual(totalWater, totalPhone, totalGas, totalElectricity)
-    setTotalAnnual( resultTotalAnnual);
-    // calculateTotalAnnualByMonth();
-  }, [totalWater, totalPhone, totalGas, totalElectricity]);
-    
-  useEffect(() => {
-    const dataByMonth = calculateTotalAnnualByMonth();
-    setSpendingsByMonth(dataByMonth.totalSpending);
-    
-  }, [water, electricity, gas, phone]);
-
-
+    loadBillingsWater(uid, id, year);
+    loadBillingsElectricity(uid, id, year);
+    loadBillingsGas(uid, id, year);
+    loadBillingsPhone(uid, id, year);
+  }, [year])
   
-  const calculateTotalAnnualByMonth = () => {
-    let billing = {}
-
-    if(water) billing = { ...billing, water }
-    if(electricity) billing = { ...billing, electricity }
-    if(gas) billing = { ...billing, gas }
-    if(phone) billing = { ...billing, phone }
-
-    return useCalculateTotalSpendingByMonth(billing);
-
-  }
-
   const navigateTo = (type) => {
-
-    let stateByType = null;
-    switch (type) {
-      case 'electricidad':
-        stateByType = electricity;
-        break;
-      case 'agua':
-        stateByType = water;
-        break;
-      case 'gas':
-        stateByType = gas;
-        break;
-      case 'telefono':
-        stateByType = phone;
-        break;
-    
-      default:
-        break;
-    }
-    
-    navigate(`/facturas/${id}/${year}/${type}`, { state: { type: stateByType, currentAddress: currentAddress, spendingsByMonth: spendingsByMonth } });
+   
+    navigate(`/facturas/${id}/${year}/${type}`, { state: { type: type, currentAddress: currentAddress, spendingsByMonth: spendingsByMonth } });
   }
+  
   return (
     <>
       <section className="container">
@@ -130,63 +73,18 @@ export const BillingsDetailsComponent = () => {
           
           <div className="sectionBillings flex-column">
             <div className="billing-row flex-row">
-              <div className="billing ligth linkTo" onClick={ () => navigateTo('electricidad') }>
-                <span className="material-symbols-outlined billing-icon">emoji_objects</span>
-                {
-                  (totalElectricity)
-                      && (
-                        <>
-                          <p className="description totalAmount">Total Gasto: { totalElectricity.totalAmounts } €</p>
-                          <p className="description averageAmount">Media Gasto: { totalElectricity.averageAmount } €</p>
-                          <p className="description totalUsage">Total Consumo: { totalElectricity.totalUsage } Kwh</p>
-                          <p className="description averageUsage">Media Consumo: { totalElectricity.averageUsage } Kwh</p>
-                        </>
-                      )
-                }
-                
-              </div>
-              <div className="billing gas linkTo" onClick={ () => navigateTo('gas') }>
-                <span className="material-symbols-outlined billing-icon">mode_heat</span>
-                {
-                  (totalGas)
-                      && (
-                        <>
-                          <p className="description totalAmount">Total Gasto: { totalGas.totalAmounts } €</p>
-                          <p className="description averageAmount">Media Gasto: { totalGas.averageAmount } €</p>
-                          <p className="description totalUsage">Total Consumo: { totalGas.totalUsage } m3</p>
-                          <p className="description averageUsage">Media Consumo: { totalGas.averageUsage } m3</p>
-                        </>
-                      )
-                }
-              </div>
+
+              <StatisticsDetail to='electricidad' icon='emoji_objects' totalBilling={ totalElectricity } spendingsByMonth={ spendingsByMonth } year={ year } />
+              
+              <StatisticsDetail to='gas' icon='mode_heat' totalBilling={ totalGas } spendingsByMonth={ spendingsByMonth } year={ year } />
+              
             </div>
             <div className="billing-row flex-row">
-              <div className="billing water linkTo" onClick={ () => navigateTo('agua') }>
-                <span className="material-symbols-outlined billing-icon">water_drop</span>
-                {
-                  (totalWater)
-                      && (
-                        <>
-                          <p className="description totalAmount">Total Gasto: { totalWater.totalAmounts } €</p>
-                          <p className="description averageAmount">Media Gasto: { totalWater.averageAmount } €</p>
-                          <p className="description totalUsage">Total Consumo: { totalWater.totalUsage } m3</p>
-                          <p className="description averageUsage">Media Consumo: { totalWater.averageUsage } m3</p>
-                        </>
-                      )
-                }
-              </div>
-              <div className="billing phone linkTo" onClick={ () => navigateTo('telefono') }>
-                <span className="material-symbols-outlined billing-icon">call</span>
-                {
-                  (totalPhone)
-                      && (
-                        <>
-                          <p className="description totalAmount">Total Gasto: { totalPhone.totalAmounts } €</p>
-                          <p className="description averageAmount">Media Gasto: { totalPhone.averageAmount } €</p>
-                        </>
-                      )
-                }
-              </div>
+
+              <StatisticsDetail to='agua' icon='water_drop' totalBilling={ totalWater } spendingsByMonth={ spendingsByMonth } year={ year } />
+            
+              <StatisticsDetail to='telefono' icon='call' totalBilling={ totalPhone } spendingsByMonth={ spendingsByMonth } year={ year } />
+
             </div>
           </div>
 

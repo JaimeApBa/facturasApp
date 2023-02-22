@@ -1,5 +1,5 @@
 
-export const useCalculateTotalAnnual = (totalWater={}, totalElectricity={}, totalGas={}, totalPhone={}) => {
+export const calculateTotalAnnual = (totalWater={}, totalElectricity={}, totalGas={}, totalPhone={}) => {
 
     let total = 0;
     if(totalWater && Object.keys(totalWater).length > 0) {

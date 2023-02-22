@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 import { HomeContext, homeReducer, homeTypes } from './';
-import { useLoadAllAddressesByUser, useLoadBillingsByYear, useUploadNewAddress } from '../../hooks';
+import { loadAllAdressesByUser, loadBillingsByYear } from "../../helpers";
+
 
 
 export const HomeProvider = ({ children }) => {
@@ -17,7 +18,7 @@ export const HomeProvider = ({ children }) => {
     const [homeState, dispatch] = useReducer(homeReducer, initialState);
 
     const getAllAddressesByUser = async (id) => {
-        const result = await useLoadAllAddressesByUser(id);
+        const result = await loadAllAdressesByUser(id);
         
         const action = {
             type: homeTypes.allAddress,
@@ -38,7 +39,7 @@ export const HomeProvider = ({ children }) => {
 
     const loadBillingsWater = async (uid, id, year) => {
         const billingType = 'Agua';
-        const result = await useLoadBillingsByYear(uid, id, billingType,year);
+        const result = await loadBillingsByYear(uid, id, billingType,year);
 
         const action = {
             type: homeTypes.water,
@@ -49,7 +50,7 @@ export const HomeProvider = ({ children }) => {
     }
     const loadBillingsElectricity = async (uid, id, year) => {
         const billingType = 'Electricidad';
-        const result = await useLoadBillingsByYear(uid, id, billingType,year);
+        const result = await loadBillingsByYear(uid, id, billingType,year);
 
         const action = {
             type: homeTypes.electricity,
@@ -60,7 +61,7 @@ export const HomeProvider = ({ children }) => {
     }
     const loadBillingsGas = async (uid, id, year) => {
         const billingType = 'Gas';
-        const result = await useLoadBillingsByYear(uid, id, billingType,year);
+        const result = await loadBillingsByYear(uid, id, billingType,year);
 
         const action = {
             type: homeTypes.gas,
@@ -71,7 +72,7 @@ export const HomeProvider = ({ children }) => {
     }
     const loadBillingsPhone = async (uid, id, year) => {
         const billingType = 'Teléfono';
-        const result = await useLoadBillingsByYear(uid, id, billingType,year);
+        const result = await loadBillingsByYear(uid, id, billingType,year);
 
         const action = {
             type: homeTypes.phone,

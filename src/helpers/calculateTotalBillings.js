@@ -1,5 +1,5 @@
 
-export const useCalculateTotalBillings = (billing=[]) => {
+export const calculateTotalBillings = (billing=[]) => {
     if(billing) {
 
         let totalAmounts = 0;

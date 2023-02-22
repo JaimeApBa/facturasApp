@@ -16,7 +16,7 @@ export const Navbar = () => {
     
     const navigateBack = () => {
         if(params.year) {
-            navigate(`/facturas/${params.id}`)
+            navigate(`/facturas/${params.id}`, { state: { defaultYear: params.year } })
         } else {
             navigate('/');
         }

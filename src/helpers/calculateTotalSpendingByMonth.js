@@ -1,5 +1,5 @@
 
-export const useCalculateTotalSpendingByMonth = ({ ...billing}) => {
+export const calculateTotalSpendingByMonth = ({ ...billing}) => {
     const totalSpending = Array(12).fill(0);
     if(billing) {
         for (const key in billing) {
