@@ -1,6 +1,6 @@
 
 import { useContext, useState } from "react";
-import { useForm } from "../../../../bolder/src/hooks";
+import { useForm } from "../../hooks";
 import { Header } from "../../ui";
 import { AuthNavbar } from "../components";
 import { AuthContext } from "../context";
